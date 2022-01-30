@@ -39,12 +39,11 @@ public class Comment {
     private Date deletedDate;
 
 
-
-    @ManyToOne(cascade={CascadeType.ALL})
-    @JoinColumn(name="manager_id")
+    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "parent_id")
     private Comment parentComment;
 
-    @OneToMany(mappedBy="parentComment")
+    @OneToMany(mappedBy = "parentComment", cascade = {CascadeType.ALL})
     @JsonView({View.ChildOnly.class})
     private Set<Comment> childComment = new HashSet<Comment>();
 
