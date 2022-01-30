@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ICommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByParentCommentIsNull();
+    List<Comment> findAllByBlogIdAndParentCommentIsNull(Long blogId);
 }

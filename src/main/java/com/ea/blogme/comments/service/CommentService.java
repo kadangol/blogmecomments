@@ -1,6 +1,7 @@
 package com.ea.blogme.comments.service;
 
 import com.ea.blogme.comments.dto.CommentInputDto;
+import com.ea.blogme.comments.dto.CommentUpdateDto;
 import com.ea.blogme.comments.exceptionhandler.exceptions.CustomException;
 import com.ea.blogme.comments.models.Comment;
 import com.ea.blogme.comments.repository.ICommentRepository;
@@ -38,15 +39,22 @@ public class CommentService {
             if (parentComment.orElse(null) == null)
                 throw new CustomException("Parent comment not found.");
         }
-        var comment = new Comment(commentDto.getBlogId(), commentDto.getCommentText(), false, new Date(), null, null);
+        var comment = new Comment(commentDto.getBlogId(), commentDto.getCommentText(), new Date(), null);
         comment.setParentComment(parentComment == null ? null : parentComment.get());
         commentRepository.save(comment);
         return comment;
     }
 
-    public Comment update(CommentInputDto CommentUpdate, Long id) {
-        return null;
-
+    public Comment update(CommentUpdateDto commentUpdateDto, Long id) {
+        var comment = commentRepository.findById(id);
+        if(comment.isPresent()){
+            var result = comment.get();
+            result.setCommentText(commentUpdateDto.getCommentText());
+            result.setModifiedDate(new Date());
+            commentRepository.save(result);
+            return result;
+        }
+        throw  new CustomException("Comment not found");
     }
 
     @Transactional
@@ -55,5 +63,9 @@ public class CommentService {
 
         commentRepository.deleteById(id);
         return "Comment Deleted.";
+    }
+
+    public List<Comment> findByBlogId(Long blogId) {
+        return commentRepository.findAllByBlogIdAndParentCommentIsNull(blogId);
     }
 }

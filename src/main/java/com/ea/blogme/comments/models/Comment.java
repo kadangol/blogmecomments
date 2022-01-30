@@ -30,14 +30,9 @@ public class Comment {
     @JsonView({View.ChildOnly.class})
     private String commentText;
     @JsonView({View.ChildOnly.class})
-    private boolean isDeleted;
-    @JsonView({View.ChildOnly.class})
     private Date createdDate;
     @JsonView({View.ChildOnly.class})
     private Date modifiedDate;
-    @JsonView({View.ChildOnly.class})
-    private Date deletedDate;
-
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "parent_id")
@@ -48,12 +43,10 @@ public class Comment {
     private Set<Comment> childComment = new HashSet<Comment>();
 
 
-    public Comment(Long blogId, String commentText, boolean isDeleted, Date createdDate, Date modifiedDate, Date deletedDate) {
+    public Comment(Long blogId, String commentText,  Date createdDate, Date modifiedDate) {
         this.blogId = blogId;
         this.commentText = commentText;
-        this.isDeleted = isDeleted;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
-        this.deletedDate = deletedDate;
     }
 }

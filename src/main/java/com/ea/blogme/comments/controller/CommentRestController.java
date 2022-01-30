@@ -1,6 +1,7 @@
 package com.ea.blogme.comments.controller;
 
 import com.ea.blogme.comments.dto.CommentInputDto;
+import com.ea.blogme.comments.dto.CommentUpdateDto;
 import com.ea.blogme.comments.models.Comment;
 import com.ea.blogme.comments.service.CommentService;
 import com.ea.blogme.comments.view.View;
@@ -40,12 +41,19 @@ public class CommentRestController {
     }
 
     @PutMapping("/{id}")
-    public void update(@RequestBody CommentInputDto commentDto, @PathVariable Long id) {
-        commentService.update(commentDto, id);
+    @JsonView({View.ChildOnly.class})
+    public Comment update(@Valid @RequestBody CommentUpdateDto commentDto, @PathVariable Long id) {
+        return commentService.update(commentDto, id);
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Long id) {
         return commentService.delete(id);
+    }
+
+    @GetMapping("/blog/{blogId}")
+    @JsonView({View.ChildOnly.class})
+    public List<Comment> getAllByBlogId(@PathVariable Long blogId) {
+        return commentService.findByBlogId(blogId);
     }
 }
