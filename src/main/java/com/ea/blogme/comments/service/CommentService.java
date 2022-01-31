@@ -39,7 +39,7 @@ public class CommentService {
             if (parentComment.orElse(null) == null)
                 throw new CustomException("Parent comment not found.");
         }
-        var comment = new Comment(commentDto.getBlogId(), commentDto.getCommentText(), new Date(), null);
+        var comment = new Comment(commentDto.getBlogId(), commentDto.getUserId(), commentDto.getCommentText(), new Date(), null);
         comment.setParentComment(parentComment == null ? null : parentComment.get());
         commentRepository.save(comment);
         return comment;
@@ -49,6 +49,9 @@ public class CommentService {
         var comment = commentRepository.findById(id);
         if(comment.isPresent()){
             var result = comment.get();
+            if(result.getUserId() != commentUpdateDto.getUserId()){
+                throw   new CustomException("Cannot update comment of different user.");
+            }
             result.setCommentText(commentUpdateDto.getCommentText());
             result.setModifiedDate(new Date());
             commentRepository.save(result);

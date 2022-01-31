@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,6 +34,9 @@ public class Comment {
     private Date createdDate;
     @JsonView({View.ChildOnly.class})
     private Date modifiedDate;
+    @JsonView({View.ChildOnly.class})
+    @NotNull
+    private Long userId;
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "parent_id")
@@ -43,8 +47,9 @@ public class Comment {
     private Set<Comment> childComment = new HashSet<Comment>();
 
 
-    public Comment(Long blogId, String commentText,  Date createdDate, Date modifiedDate) {
+    public Comment(Long blogId, Long userId, String commentText, Date createdDate, Date modifiedDate) {
         this.blogId = blogId;
+        this.userId = userId;
         this.commentText = commentText;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;

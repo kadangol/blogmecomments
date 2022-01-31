@@ -13,6 +13,7 @@ import java.util.Date;
 public class CommentInputDto {
     private Long id;
     private Long blogId;
+    private Long userId;
     private String commentText;
     private Long parentId;
 }
