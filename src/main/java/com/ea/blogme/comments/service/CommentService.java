@@ -29,7 +29,10 @@ public class CommentService {
 
     public Comment findById(Long id) {
         var a = commentRepository.findById(id);
-        return a.get();
+        if (a.isPresent())
+            return a.get();
+        else
+            return null;
     }
 
     public Comment save(CommentInputDto commentDto) {
@@ -47,17 +50,17 @@ public class CommentService {
 
     public Comment update(CommentUpdateDto commentUpdateDto, Long id) {
         var comment = commentRepository.findById(id);
-        if(comment.isPresent()){
+        if (comment.isPresent()) {
             var result = comment.get();
-            if(result.getUserId() != commentUpdateDto.getUserId()){
-                throw   new CustomException("Cannot update comment of different user.");
+            if (result.getUserId() != commentUpdateDto.getUserId()) {
+                throw new CustomException("Cannot update comment of different user.");
             }
             result.setCommentText(commentUpdateDto.getCommentText());
             result.setModifiedDate(new Date());
             commentRepository.save(result);
             return result;
         }
-        throw  new CustomException("Comment not found");
+        throw new CustomException("Comment not found");
     }
 
     @Transactional
